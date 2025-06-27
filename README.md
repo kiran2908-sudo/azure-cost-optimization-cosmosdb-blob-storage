@@ -1,0 +1,1 @@
+# azure-cost-optimization-cosmosdb-blob-storage
