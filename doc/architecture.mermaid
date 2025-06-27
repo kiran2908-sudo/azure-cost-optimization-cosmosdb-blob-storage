@@ -1,0 +1,35 @@
+graph TD
+    subgraph "Client Application"
+        A[Client App]
+    end
+
+    subgraph "Azure API Management"
+        B(API Management)
+    end
+
+    subgraph "Business Logic"
+        C{Choice}
+        D[Azure Function: Write to Cosmos]
+        E[Azure Function: Read from Cosmos]
+        F[Azure Function: Read from Blob]
+    end
+
+    subgraph "Data Storage"
+        G[(Azure Cosmos DB - Hot Data)]
+        H[(Azure Blob Storage - Cold Data)]
+    end
+
+    subgraph "Scheduled Archiving"
+        I[Azure Function: Archive Old Data]
+    end
+
+    A -- "Read/Write Request" --> B
+    B -- "Forward Request" --> C
+    C -- "Recent Data (Read/Write)" --> D
+    C -- "Recent Data (Read)" --> E
+    C -- "Old Data (Read)" --> F
+    D -- "Write" --> G
+    E -- "Read" --> G
+    F -- "Read" --> H
+    I -- "Time Trigger (e.g., daily)" --> G
+    I -- "Move Data > 3 months" --> H
